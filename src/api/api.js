@@ -7,3 +7,12 @@ export const loginAPW = (params) => {
         data: params
     })
 };
+
+export const userInfo = (params) => {
+    return axios.request({
+        url: `/api/v1/user/userInfo`,
+        method: 'get',
+        params: params
+    })
+};
+
