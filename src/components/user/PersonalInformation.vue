@@ -36,16 +36,16 @@
           <FormItem label="邮箱：">
             <Input v-model="profile.email" placeholder="Enter something..."></Input>
           </FormItem>
-           <FormItem label="生日：">
+          <FormItem label="生日：">
             <Input v-model="profile.birthday" placeholder="Enter something..."></Input>
           </FormItem>
-           <FormItem label="性别：">
+          <FormItem label="性别：">
             <Input v-model="profile.sex" placeholder="Enter something..."></Input>
           </FormItem>
-           <FormItem label="地址：">
+          <FormItem label="地址：">
             <Input v-model="profile.address" placeholder="Enter something..."></Input>
           </FormItem>
-           <FormItem label="电话：">
+          <FormItem label="电话：">
             <Input v-model="profile.phone" placeholder="Enter something..."></Input>
           </FormItem>
         </Form>
@@ -70,7 +70,7 @@ export default {
         sex: 0,
         user_id: ""
       },
-      modal1: false,
+      modal1: false
     };
   },
   methods: {
