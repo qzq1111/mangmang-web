@@ -1,76 +1,55 @@
 <template>
-  <div>
-    <div class="avatar-img">
-      <img :src="profile.avatar_url" />
-    </div>
-    <div class="user-info">
-      <h1>{{profile.name}}</h1>
-      <br />
-      <div class="user-item">
-        <h2>邮箱：</h2>
-        <p>{{profile.email}}</p>
-      </div>
-      <div class="user-item">
-        <h2>生日：</h2>
-        <p>{{profile.birthday}}</p>
-      </div>
-      <div class="user-item">
-        <h2>性别：</h2>
-        <p v-if="profile.sex ==0">未知</p>
-        <p v-else-if="profile.sex ==1">男</p>
-        <p v-else>女</p>
-      </div>
-      <div class="user-item">
-        <h2>地址：</h2>
-        <p>{{profile.address}}</p>
-      </div>
-      <div class="user-item">
-        <h2>电话：</h2>
-        <p>{{profile.phone }}</p>
-      </div>
-    </div>
-    <div>
-      <Button type="primary" @click="modal1 = true">修改个人信息</Button>
-      <Modal v-model="modal1" title="修改个人信息">
-        <Form :model="profile" :label-width="80">
-          <FormItem label="邮箱：">
-            <Input v-model="profile.email" placeholder="Enter something..."></Input>
-          </FormItem>
-          <FormItem label="生日：">
-            <Input v-model="profile.birthday" placeholder="Enter something..."></Input>
-          </FormItem>
-          <FormItem label="性别：">
-            <Input v-model="profile.sex" placeholder="Enter something..."></Input>
-          </FormItem>
-          <FormItem label="地址：">
-            <Input v-model="profile.address" placeholder="Enter something..."></Input>
-          </FormItem>
-          <FormItem label="电话：">
-            <Input v-model="profile.phone" placeholder="Enter something..."></Input>
-          </FormItem>
-        </Form>
-      </Modal>
-    </div>
-  </div>
+  <Row :gutter="16">
+    <Col span="7">
+      <Card dis-hover>
+        <div class="avatar-img">
+          <Avatar
+            icon="ios-person"
+            src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar"
+            :style="{width:'200px',height:'200px',borderRadius: '100px'}"
+          />
+          <h1>{{name}}</h1>
+          <p>{{comment}}</p>
+        </div>
+        <br/>
+        <p><Icon type="ios-briefcase-outline" />  {{job}}</p>
+        <br/>
+        <p><Icon type="ios-pin-outline" />{{address}}</p>
+        <Divider />
+        <p>标签</p>
+        <Tag v-for="tag in tags" :key="tag">{{tag}}</Tag>
+        <Button icon="ios-add" type="dashed" size="small">添加标签</Button>
+      </Card>
+    </Col>
+    <Col span="17">
+      <Card dis-hover>
+        <Tabs value="name1">
+          <TabPane label="名片" name="name1">
+            <business-card></business-card>
+          </TabPane>
+          <TabPane label="项目" name="name2"></TabPane>
+          <TabPane label="任务" name="name3"></TabPane>
+        </Tabs>
+      </Card>
+    </Col>
+  </Row>
 </template>
 
 <script>
 import { userInfo } from "../../api/api";
+import BusinessCard from "./personal/BusinessCard";
 export default {
   name: "PersonalInformation",
+  components: {
+    BusinessCard
+  },
   data() {
     return {
-      profile: {
-        address: "",
-        avatar_url: "",
-        birthday: "",
-        email: "",
-        name: "",
-        phone: "",
-        sex: 0,
-        user_id: ""
-      },
-      modal1: false
+      name: "那些年踩过的坑",
+      job:"全栈工程师",
+      address: "四川成都",
+      comment:"踩那些你不敢踩的坑",
+      tags:["Python","Golang","后端","Liunx"]
     };
   },
   methods: {
@@ -85,34 +64,12 @@ export default {
         })
         .catch(err => {});
     },
-    getProjectInfo: function() {}
   }
-  // created: function() {
-  //   this.getUserInfo();
-  // }
 };
 </script>
 
 <style scoped>
 .avatar-img {
   text-align: center;
-  width: 200px;
-  height: 200px;
-}
-.avatar-img img {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  margin: auto;
-}
-.user-info {
-  width: 450px;
-}
-.user-item h2,
-p {
-  display: inline;
 }
 </style>

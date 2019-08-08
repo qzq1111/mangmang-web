@@ -6,7 +6,6 @@
         <MenuItem name="项目管理" :to="{ path: '/projectManagement' }">项目管理</MenuItem>
         <MenuGroup title="设置">
           <MenuItem name="个人信息" :to="{ path: '/personalInformation' }">个人中心</MenuItem>
-          <MenuItem name="个人名片" :to="{ path: '/businessCard' }">个人名片</MenuItem>
           <MenuItem name="个人设置" :to="{ path: '/personalSetting' }">个人设置</MenuItem>
           <!-- <MenuItem name="4"> 我的好友</MenuItem> -->
         </MenuGroup>
@@ -17,7 +16,7 @@
         <div :style="{float: 'right'}">
           <Dropdown  @on-click="toPersonal">
             <a href="javascript:void(0)">
-              <Avatar icon="ios-person" size="large" />
+              <Avatar icon="ios-person" size="large" src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar"/>
             </a>
             <DropdownMenu slot="list">
               <DropdownItem name= "测试"  >个人中心</DropdownItem>
@@ -56,4 +55,7 @@ export default {
 </script>
 
 <style scoped>
+.ivu-layout{
+  background: #ffffff;
+}
 </style>

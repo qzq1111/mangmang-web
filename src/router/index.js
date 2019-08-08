@@ -7,7 +7,6 @@ import MangMangIndex from '@/components/MangMangIndex'
 import MangMangHome from '@/components/home/MangMangHome'
 
 import PersonalInformation from '@/components/user/PersonalInformation'
-import BusinessCard from '@/components/user/BusinessCard'
 import PersonalSetting from '@/components/user/PersonalSetting'
 
 import ProjectMain from '@/components/project/ProjectMain'
@@ -43,11 +42,6 @@ const router = new Router({
           path: '/personalInformation',
           name: '个人信息',
           component: PersonalInformation
-        },
-        {
-          path: '/businessCard',
-          name: '个人名片',
-          component: BusinessCard
         },
         {
           path:'/personalSetting',
