@@ -12,13 +12,13 @@
       <Col>
         <div>
           <Button type="primary" @click="projectModal = true">添加项目</Button>
-          <Modal v-model="projectModal" title="修改个人信息">
+          <Modal v-model="projectModal" title="添加项目" @on-ok="addProject">
             <Form :model="project" :label-width="80">
               <FormItem label="项目名称：">
                 <Input v-model="project.name" placeholder="Enter something..."></Input>
               </FormItem>
               <FormItem label="项目描述">
-                <Input v-model="project.commet" placeholder="Enter something..."></Input>
+                <Input v-model="project.comment" placeholder="Enter something..."></Input>
               </FormItem>
             </Form>
           </Modal>
@@ -31,13 +31,11 @@
         <Card>
           <div class="body-content">
             <h1>{{item.name}}</h1>
-            <p>{{item.commet}}</p>
-            <p>Content of card</p>
-            <p>Content of card</p>
+            <p>{{item.comment}}</p>
           </div>
           <div class="body-footer">
             <Button type="text">修改</Button>
-            <Button type="text" :to="'/projectManagement/'+item.id">查看</Button>
+            <Button type="text" v-on:click="onClickMe({id:item.id,name:item.name})">查看</Button>
           </div>
         </Card>
       </Col>
@@ -52,42 +50,38 @@ export default {
     return {
       project: {
         name: "",
-        commet: ""
+        comment: ""
       },
       projects: [
         {
           id: "13321",
           name: "项目1",
-          commet: "这是测试描述"
+          comment: "这是测试描述"
         },
         {
           id: "1325321",
           name: "项目1",
-          commet: "这是测试描述"
-        },
-        {
-          id: "41321",
-          name: "项目1",
-          commet: "这是测试描述"
-        },
-        {
-          id: "4324213",
-          name: "项目1",
-          commet: "这是测试描述"
-        },
-        {
-          id: "432423",
-          name: "项目1",
-          commet: "这是测试描述"
-        },
-        {
-          id: "343324",
-          name: "项目1",
-          commet: "这是测试描述"
-        },
+          comment: "这是测试描述"
+        }
       ],
       projectModal: false
     };
+  },
+  methods: {
+    onClickMe: function(data) {
+      this.$emit("child-say", data);
+    },
+    addProject: function() {
+      if (this.project.name === "") {
+        return;
+      } else {
+        this.projects.push({
+          id: Math.random() * 50,
+          name: this.project.name,
+          commet: this.project.comment
+        });
+      }
+    }
   }
 };
 </script>

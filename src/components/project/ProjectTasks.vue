@@ -1,6 +1,9 @@
 <template>
   <div>
     <Row>
+      <h1>{{id}}</h1>
+    </Row>
+    <Row>
       <Col span="6">
         <Input
           search
@@ -12,7 +15,7 @@
       <Col>
         <div>
           <Button type="primary" @click="taskModal = true">添加任务</Button>
-          <Modal v-model="taskModal" title="修改个人信息">
+          <Modal v-model="taskModal" title="添加任务">
             <Form :model="task" :label-width="80">
               <FormItem label="任务名称：">
                 <Input v-model="task.name" placeholder="Enter something..."></Input>
@@ -22,6 +25,11 @@
               </FormItem>
             </Form>
           </Modal>
+          <Button type="dashed">指定我的</Button>
+          <Button type="dashed">未关闭的</Button>
+          <Button type="dashed">Dashed</Button>
+          <Button type="dashed">Dashed</Button>
+          <Button type="dashed">Dashed</Button>
         </div>
       </Col>
     </Row>
@@ -82,6 +90,12 @@ export default {
         }
       ]
     };
+  },
+  props: {
+    id: {
+      type: String,
+      required: true
+    }
   }
 };
 </script>

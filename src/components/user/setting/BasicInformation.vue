@@ -14,8 +14,11 @@
         <FormItem label="个人介绍">
           <Input v-model="formTop.input3"></Input>
         </FormItem>
+        <FormItem label="生日">
+          <DatePicker type="date" placeholder="Select date" v-model="formTop.input4"></DatePicker>
+        </FormItem>
         <FormItem label="居住地">
-          <Input v-model="formTop.input3"></Input>
+          <Input v-model="formTop.input5"></Input>
         </FormItem>
         <FormItem>
           <Button type="primary">更新基本信息</Button>
@@ -30,7 +33,10 @@
             src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar"
             :style="{width:'100px',height:'100px',borderRadius: '50px'}"
           />
-          <Upload action="//jsonplaceholder.typicode.com/posts/" :style="{paddingLeft: '15px',paddingTop: '15px'}">
+          <Upload
+            action="//jsonplaceholder.typicode.com/posts/"
+            :style="{paddingLeft: '15px',paddingTop: '15px'}"
+          >
             <Button>修改头像</Button>
           </Upload>
         </FormItem>
@@ -46,14 +52,15 @@ export default {
       formTop: {
         input1: "",
         input2: "",
-        input3: ""
+        input3: "",
+        input4: "",
+        input5: "",
       }
     };
   }
 };
 </script>
 <style scoped>
-
 </style>
 
 

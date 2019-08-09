@@ -11,7 +11,7 @@ import PersonalSetting from '@/components/user/PersonalSetting'
 
 import ProjectMain from '@/components/project/ProjectMain'
 import ProjectManagement from '@/components/project/ProjectManagement'
-import ProjectTasks from '@/components/project/ProjectTasks'
+// import ProjectTasks from '@/components/project/ProjectTasks'
 
 
 
@@ -58,11 +58,11 @@ const router = new Router({
               name: "项目管理",
               component: ProjectManagement
             },
-            {
-              path: ':key',
-              name: "项目任务",
-              component: ProjectTasks
-            }
+            // {
+            //   path: ':key',
+            //   name: "项目任务",
+            //   component: ProjectTasks
+            // }
           ]
         },
 
