@@ -4,24 +4,24 @@
       <h2>基本设置</h2>
     </Col>
     <Col span="12">
-      <Form :model="formTop" label-position="top">
+      <Form :model="profile" label-position="top">
         <FormItem label="昵称">
-          <Input v-model="formTop.input1"></Input>
+          <Input v-model="profile.name"></Input>
         </FormItem>
         <FormItem label="邮箱">
-          <Input v-model="formTop.input2"></Input>
+          <Input v-model="profile.email"></Input>
         </FormItem>
         <FormItem label="个人介绍">
-          <Input v-model="formTop.input3"></Input>
+          <Input v-model="profile.input3"></Input>
         </FormItem>
         <FormItem label="生日">
-          <DatePicker type="date" placeholder="Select date" v-model="formTop.input4"></DatePicker>
+          <DatePicker type="date" placeholder="Select date" v-model="profile.birthday"></DatePicker>
         </FormItem>
         <FormItem label="居住地">
-          <Input v-model="formTop.input5"></Input>
+          <Input v-model="profile.address"></Input>
         </FormItem>
         <FormItem>
-          <Button type="primary">更新基本信息</Button>
+          <Button type="primary" @click="putUserInfo">更新基本信息</Button>
         </FormItem>
       </Form>
     </Col>
@@ -30,7 +30,7 @@
         <FormItem label="头像">
           <Avatar
             icon="ios-person"
-            src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar"
+            :src="profile.avatar_url"
             :style="{width:'100px',height:'100px',borderRadius: '50px'}"
           />
           <Upload
@@ -45,18 +45,87 @@
   </Row>
 </template>
 <script>
+import { userInfo, changeUserInfo } from "../../../api/api";
 export default {
   name: "BasicInformation",
   data() {
     return {
-      formTop: {
-        input1: "",
-        input2: "",
-        input3: "",
-        input4: "",
-        input5: "",
+      profile: {
+        address: "",
+        avatar_url: "",
+        birthday: "",
+        email: "",
+        name: "",
+        phone: "",
+        sex: "",
+        user_id: ""
       }
     };
+  },
+  methods: {
+    dateFtt: function(fmt, date) {
+      var o = {
+        "M+": date.getMonth() + 1, //月份
+        "d+": date.getDate(), //日
+        "h+": date.getHours(), //小时
+        "m+": date.getMinutes(), //分
+        "s+": date.getSeconds(), //秒
+        "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+        S: date.getMilliseconds() //毫秒
+      };
+      if (/(y+)/.test(fmt))
+        fmt = fmt.replace(
+          RegExp.$1,
+          (date.getFullYear() + "").substr(4 - RegExp.$1.length)
+        );
+      for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+          fmt = fmt.replace(
+            RegExp.$1,
+            RegExp.$1.length == 1
+              ? o[k]
+              : ("00" + o[k]).substr(("" + o[k]).length)
+          );
+      return fmt;
+    },
+    getUserInfo: function() {
+      userInfo({ key: this.$store.getters.userId })
+        .then(res => {
+          var data = res.data;
+          if (data.code == 0) {
+            this.profile = data.data;
+          } else {
+          }
+        })
+        .catch(err => {});
+    },
+    putUserInfo: function() {
+      changeUserInfo({
+        user_id: this.profile.user_id,
+        name: this.profile.name,
+        email: this.profile.email,
+        sex: this.profile.sex,
+        birthday: this.dateFtt("yyyy-MM-dd", new Date(this.profile.birthday)),
+        address: this.profile.address
+      })
+        .then(res => {
+          var data = res.data;
+          console.log(data);
+          if (data.code === 0) {
+            this.$Message.success(data.msg);
+            this.getUserInfo();
+          } else {
+            this.$Message.error(data.msg);
+            this.getUserInfo();
+          }
+        })
+        .catch(err => {
+          this.getUserInfo();
+        });
+    }
+  },
+  created: function() {
+    this.getUserInfo();
   }
 };
 </script>

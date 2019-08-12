@@ -2,7 +2,7 @@
   <div class="mang-mang-header">
     <h1>MangMang</h1>
     <Card style="width:400px;margin-left: auto;margin-right: auto;" dis-hover>
-      <Form  :model="formInline" label-position="left" :label-width="50">
+      <Form :model="formInline" label-position="left" :label-width="50">
         <FormItem prop="user" label="账号">
           <Input type="text" v-model="formInline.phone" placeholder="手机号码">
             <Icon type="ios-person-outline" slot="prepend"></Icon>
@@ -40,9 +40,17 @@ export default {
           var data = res.data;
           if (data.code === 0) {
             this.$Message.success(data.msg);
-            this.$router.replace({path: '/home'});
+            sessionStorage.setItem("userName", data.data.name);
+            sessionStorage.setItem("userImage", data.data.avatar_url);
+            sessionStorage.setItem("userId", data.data.user_id);
+            this.$store.dispatch("setUser", data.data.name);
+            this.$store.dispatch("setImage", data.data.avatar_url);
+            this.$store.dispatch("setUserId",data.data.user_id);
+
+            this.$router.replace({ path: "/home" });
           } else {
             this.$Message.error(data.msg);
+            this.$store.dispatch("setUser", null);
           }
         })
         .catch(err => {

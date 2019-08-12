@@ -16,3 +16,11 @@ export const userInfo = (params) => {
     })
 };
 
+export const changeUserInfo = (params) => {
+    return axios.request({
+        url: `/api/v1/user/changeUserInfo`,
+        method: 'put',
+        data: params
+    })
+}
+

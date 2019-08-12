@@ -14,12 +14,19 @@
     <Layout>
       <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.1)'}">
         <div :style="{float: 'right'}">
-          <Dropdown  @on-click="toPersonal">
+          欢迎你{{currentUser}}
+          <Dropdown @on-click="toPersonal">
             <a href="javascript:void(0)">
-              <Avatar icon="ios-person" size="large" src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar"/>
+              <Avatar
+                v-if="!userImage"
+                icon="ios-person"
+                size="large"
+                src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar"
+              />
+              <Avatar v-else icon="ios-person" size="large" :src="userImage" />
             </a>
             <DropdownMenu slot="list">
-              <DropdownItem name= "测试"  >个人中心</DropdownItem>
+              <DropdownItem name="测试">个人中心</DropdownItem>
               <DropdownItem>退出</DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -45,17 +52,37 @@ export default {
   },
   methods: {
     toPersonal() {
-      return this.$router.push({path:'/personalInformation'});
+      return this.$router.push({ path: "/personalInformation" });
     }
   },
   created: function() {
     console.log(this.$route);
+  },
+  computed: {
+    //获取当前用户名
+    currentUser() {
+      
+      return this.$store.getters.currentUser;
+    },
+    //获取当前用户的头像
+    userImage() {
+      if (
+        sessionStorage.getItem("userImage") === null ||
+        sessionStorage.getItem("userImage") === ""
+      ) {
+        this.$store.commit("userImageGet", null);
+      } else {
+        this.$store.commit("userImageGet", sessionStorage.getItem("userImage"));
+      }
+      console.log(this.$store.getters.userImage);
+      return this.$store.getters.userImage;
+    }
   }
 };
 </script>
 
 <style scoped>
-.ivu-layout{
+.ivu-layout {
   background: #ffffff;
 }
 </style>
