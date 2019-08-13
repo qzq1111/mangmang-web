@@ -24,3 +24,11 @@ export const changeUserInfo = (params) => {
     })
 }
 
+export const getBusinessCardList =(params) =>{
+    return axios.request({
+        url: `/api/v1/user/businessCard`,
+        method: 'GET',
+        params: params
+    })
+}
+

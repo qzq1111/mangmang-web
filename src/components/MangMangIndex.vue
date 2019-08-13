@@ -14,20 +14,23 @@
     <Layout>
       <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.1)'}">
         <div :style="{float: 'right'}">
-          欢迎你{{currentUser}}
           <Dropdown @on-click="toPersonal">
+            {{this.$store.getters.currentUser}}
             <a href="javascript:void(0)">
               <Avatar
-                v-if="!userImage"
+                v-if="!this.$store.getters.userImage"
                 icon="ios-person"
                 size="large"
                 src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar"
               />
-              <Avatar v-else icon="ios-person" size="large" :src="userImage" />
+              <Avatar v-else icon="ios-person" size="large" :src="this.$store.getters.userImage" />
             </a>
             <DropdownMenu slot="list">
-              <DropdownItem name="测试">个人中心</DropdownItem>
-              <DropdownItem>退出</DropdownItem>
+              <DropdownItem name="personal">个人中心</DropdownItem>
+              <DropdownItem name="logout">退出</DropdownItem>
+              <Modal title="注销登陆" v-model="logoutFlag" @on-ok="logout">
+                <p>确定要注销登陆吗？</p>
+              </Modal>
             </DropdownMenu>
           </Dropdown>
         </div>
@@ -48,36 +51,33 @@
 export default {
   name: "MangMangIndex",
   data() {
-    return {};
+    return {
+      logoutFlag: false
+    };
   },
   methods: {
-    toPersonal() {
-      return this.$router.push({ path: "/personalInformation" });
-    }
-  },
-  created: function() {
-    console.log(this.$route);
-  },
-  computed: {
-    //获取当前用户名
-    currentUser() {
-      
-      return this.$store.getters.currentUser;
-    },
-    //获取当前用户的头像
-    userImage() {
-      if (
-        sessionStorage.getItem("userImage") === null ||
-        sessionStorage.getItem("userImage") === ""
-      ) {
-        this.$store.commit("userImageGet", null);
+    toPersonal(name) {
+      if (name === "personal") {
+        return this.$router.push({ path: "/personalInformation" });
       } else {
-        this.$store.commit("userImageGet", sessionStorage.getItem("userImage"));
+        this.logoutFlag = true;
       }
-      console.log(this.$store.getters.userImage);
-      return this.$store.getters.userImage;
+    },
+    logout() {
+    
+      sessionStorage.setItem("userName", null);
+      sessionStorage.setItem("userImage", null);
+      sessionStorage.setItem("userId", null);
+      this.$store.dispatch("setUser", null);
+      this.$store.dispatch("setImage", null);
+      this.$store.dispatch("setUserId", null);
+
+      this.$router.replace({ path: "/" });
     }
   }
+  // created: function() {
+  //   console.log(this.$route);
+  // }
 };
 </script>
 

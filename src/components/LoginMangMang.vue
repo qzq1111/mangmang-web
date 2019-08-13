@@ -45,16 +45,18 @@ export default {
             sessionStorage.setItem("userId", data.data.user_id);
             this.$store.dispatch("setUser", data.data.name);
             this.$store.dispatch("setImage", data.data.avatar_url);
-            this.$store.dispatch("setUserId",data.data.user_id);
-
-            this.$router.replace({ path: "/home" });
+            this.$store.dispatch("setUserId", data.data.user_id);
+            var path = this.$route.query.redirect
+              ? this.$route.query.redirect
+              : "/home";
+            this.$router.replace({ path: path });
           } else {
             this.$Message.error(data.msg);
             this.$store.dispatch("setUser", null);
           }
         })
         .catch(err => {
-          console.log(err);
+          this.$Message.error("连接服务器失败");
         });
     }
   }

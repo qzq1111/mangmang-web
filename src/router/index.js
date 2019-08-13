@@ -37,16 +37,25 @@ const router = new Router({
           path: '',
           name: "主页",
           component: MangMangHome,
+          meta: {
+            requireAuth: true
+          },
         },
         {
           path: '/personalInformation',
           name: '个人信息',
-          component: PersonalInformation
+          component: PersonalInformation,
+          meta: {
+            requireAuth: true
+          },
         },
         {
-          path:'/personalSetting',
-          name:"个人设置",
-          component:PersonalSetting
+          path: '/personalSetting',
+          name: "个人设置",
+          component: PersonalSetting,
+          meta: {
+            requireAuth: true
+          },
         },
         {
           path: '/projectManagement',
@@ -56,7 +65,10 @@ const router = new Router({
             {
               path: '',
               name: "项目管理",
-              component: ProjectManagement
+              component: ProjectManagement,
+              meta: {
+                requireAuth: true
+              },
             },
             // {
             //   path: ':key',
@@ -70,6 +82,23 @@ const router = new Router({
 
     },
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {
+    if (sessionStorage.getItem('userName') != "null" && sessionStorage.getItem('userName') ) {
+      // 判断是否登录
+      next()
+    } else {
+      // 没登录则跳转到登录界面
+      next({
+        path: '/',
+        query: { redirect: to.fullPath }
+      })
+    }
+  } else {
+    next()
+  }
 });
 
 export default router

@@ -11,8 +11,11 @@
         <FormItem label="邮箱">
           <Input v-model="profile.email"></Input>
         </FormItem>
-        <FormItem label="个人介绍">
-          <Input v-model="profile.input3"></Input>
+        <FormItem label="个性签名">
+          <Input v-model="profile.introduction"></Input>
+        </FormItem>
+        <FormItem label="职位">
+          <Input v-model="profile.position"></Input>
         </FormItem>
         <FormItem label="生日">
           <DatePicker type="date" placeholder="Select date" v-model="profile.birthday"></DatePicker>
@@ -51,6 +54,8 @@ export default {
   data() {
     return {
       profile: {
+        position: "",
+        introduction: "",
         address: "",
         avatar_url: "",
         birthday: "",
@@ -106,7 +111,9 @@ export default {
         email: this.profile.email,
         sex: this.profile.sex,
         birthday: this.dateFtt("yyyy-MM-dd", new Date(this.profile.birthday)),
-        address: this.profile.address
+        address: this.profile.address,
+        position: this.profile.position,
+        introduction: this.profile.introduction
       })
         .then(res => {
           var data = res.data;
