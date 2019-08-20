@@ -32,3 +32,13 @@ export const getBusinessCardList =(params) =>{
     })
 }
 
+
+
+export const getProjectList =(params) =>{
+    return axios.request({
+        url: `/api/v1/project`,
+        method: 'GET',
+        params: params
+    })
+}
+

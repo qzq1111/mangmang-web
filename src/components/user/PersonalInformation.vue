@@ -9,8 +9,8 @@
           <TabPane label="名片" name="businessCard">
             <business-card ref="businessCard"></business-card>
           </TabPane>
-          <TabPane label="项目" name="name2"></TabPane>
-          <TabPane label="任务" name="name3"></TabPane>
+          <TabPane label="项目" name="projects"></TabPane>
+          <TabPane label="任务" name="task"></TabPane>
         </Tabs>
       </Card>
     </Col>
@@ -33,6 +33,10 @@ export default {
     changeTab: function(name) {
       if (name === "businessCard") {
         this.$refs.businessCard.getList();
+      }else if(name =="projects"){
+
+      }else if(name =="task"){
+        
       }
     }
   }

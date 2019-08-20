@@ -1,18 +1,17 @@
 <template>
-  <Layout :style="{minHeight: '100vh'}">
-    <Sider>
-      <Menu theme="dark" width="auto" :active-name="$route.name">
+  <Layout>
+    <Header :style="{position: 'fixed', width: '100%',zIndex:'9999'}">
+      <Menu mode="horizontal" theme="light" width="auto" :active-name="$route.name">
         <MenuItem name="主页" :to="{ path: '/home' }">主页</MenuItem>
         <MenuItem name="项目管理" :to="{ path: '/projectManagement' }">项目管理</MenuItem>
-        <MenuGroup title="设置">
+        <Submenu name="设置">
+          <template slot="title">
+            <Icon type="ios-stats" />个人设置
+          </template>
           <MenuItem name="个人信息" :to="{ path: '/personalInformation' }">个人中心</MenuItem>
           <MenuItem name="个人设置" :to="{ path: '/personalSetting' }">个人设置</MenuItem>
           <!-- <MenuItem name="4"> 我的好友</MenuItem> -->
-        </MenuGroup>
-      </Menu>
-    </Sider>
-    <Layout>
-      <Header :style="{background: '#fff', boxShadow: '0 2px 3px 2px rgba(0,0,0,.1)'}">
+        </Submenu>
         <div :style="{float: 'right'}">
           <Dropdown @on-click="toPersonal">
             {{this.$store.getters.currentUser}}
@@ -34,22 +33,17 @@
             </DropdownMenu>
           </Dropdown>
         </div>
-      </Header>
-
-      <Content :style="{padding: '16px 16px', minHeight: '280px'}">
-        <!-- <Breadcrumb :style="{margin: '24px 0'}">
-          <BreadcrumbItem :to="{ path: '/home' }">主页</BreadcrumbItem>
-          <BreadcrumbItem v-text="$route.name">Components</BreadcrumbItem>
-        </Breadcrumb>-->
-        <router-view></router-view>
-      </Content>
-    </Layout>
+      </Menu>
+    </Header>
+    <Content class="content-body">
+      <router-view></router-view>
+    </Content>
+    <Footer class="footer-center">2019 &copy; QZQ</Footer>
   </Layout>
 </template>
-
 <script>
 export default {
-  name: "MangMangIndex",
+  name: "Index",
   data() {
     return {
       logoutFlag: false
@@ -64,7 +58,6 @@ export default {
       }
     },
     logout() {
-    
       sessionStorage.setItem("userName", null);
       sessionStorage.setItem("userImage", null);
       sessionStorage.setItem("userId", null);
@@ -82,7 +75,18 @@ export default {
 </script>
 
 <style scoped>
-.ivu-layout {
-  background: #ffffff;
+.content-body {
+  padding: 16px 16px;
+  min-height: 500px;
+  margin: 88px 20px 0;
+  background-color: #fff;
+}
+.footer-center {
+  text-align: center;
+  background-color: #fff;
+}
+.ivu-layout-header {
+  height: 60px;
+  background-color: #fff;
 }
 </style>

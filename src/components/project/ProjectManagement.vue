@@ -27,49 +27,44 @@
     </Row>
     <br />
     <Row :gutter="16">
-      <Col span="6" v-for="item in projects" v-bind:key="item.id" :style="{paddingBottom: '8px'}">
+       <Col span="6"v-if="projects.length === 0">
+        <h2>啥也没有，添加点什么吧！</h2>
+      </Col>
+      <Col span="6" v-else v-for="item in projects" v-bind:key="item.id" :style="{paddingBottom: '8px'}">
         <Card>
           <div class="body-content">
-            <h1>{{item.name}}</h1>
-            <p>{{item.comment}}</p>
+            <h1>{{item.project_name}}</h1>
+            <p>{{item.project_content}}</p>
+            <p>{{item.create_time}}</p>
           </div>
           <div class="body-footer">
             <Button type="text">修改</Button>
-            <Button type="text" v-on:click="onClickMe({id:item.id,name:item.name})">查看</Button>
+            <Button type="text" v-on:click="onOpenTask(item.project_id)">查看</Button>
           </div>
         </Card>
       </Col>
+     
     </Row>
   </div>
 </template>
 
 <script>
+import { getProjectList } from "../../api/api";
 export default {
   name: "ProjectManagement",
   data() {
     return {
       project: {
-        name: "",
-        comment: ""
+        project_name: "",
+        project_content: ""
       },
-      projects: [
-        {
-          id: "13321",
-          name: "项目1",
-          comment: "这是测试描述"
-        },
-        {
-          id: "1325321",
-          name: "项目1",
-          comment: "这是测试描述"
-        }
-      ],
+      projects: [],
       projectModal: false
     };
   },
   methods: {
-    onClickMe: function(data) {
-      this.$emit("child-say", data);
+    onOpenTask: function(data) {
+      this.$router.push({path:`/projectManagement/${data}`})
     },
     addProject: function() {
       if (this.project.name === "") {
@@ -81,7 +76,22 @@ export default {
           commet: this.project.comment
         });
       }
+    },
+    getProjects: function() {
+      getProjectList({ user_id: this.$store.getters.userId })
+        .then(res => {
+          var data = res.data;
+          if (data.code === 0) {
+            this.projects = data.data.projects;
+          } else {
+            this.$Message.err(data.msg);
+          }
+        })
+        .catch(err => {});
     }
+  },
+  created: function() {
+    this.getProjects();
   }
 };
 </script>
