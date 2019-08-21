@@ -38,7 +38,7 @@
     <Content class="content-body">
       <router-view></router-view>
     </Content>
-    <Footer class="footer-center">2019 &copy; QZQ</Footer>
+    <!-- <Footer class="footer-center">2019 &copy; QZQ</Footer> -->
   </Layout>
 </template>
 <script>
@@ -77,7 +77,7 @@ export default {
 <style scoped>
 .content-body {
   padding: 16px 16px;
-  min-height: 500px;
+  /* min-height: 100%; */
   margin: 88px 20px 0;
   background-color: #fff;
 }

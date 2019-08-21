@@ -1,22 +1,6 @@
 <template>
   <div>
-    <Row>
-      <router-link :to="{path:'/projectManagement'}">返回</router-link>
-    </Row>
-    <Row>
-      <Col span="6">
-        <h1>项目任务概览</h1>
-        <v-chart :options="polar" :init-options="initOptions" />
-      </Col>
-      <Col span="6">
-        <h1>项目进度概览</h1>
-      </Col>
-      <Col span="6">
-        <h1>项目成员</h1>
-      </Col>
-    </Row>
-    <Divider />
-    <Row>
+    <Row :gutter="32">
       <Col span="6">
         <Input search enter-button="搜索任务" placeholder="Enter something..." />
       </Col>
@@ -48,25 +32,9 @@
   </div>
 </template>
 <script>
-import ECharts from "vue-echarts";
-import "echarts/lib/chart/line";
-import "echarts/lib/component/polar";
-
 export default {
-  name: "ProjectTasks",
-  components: {
-    "v-chart": ECharts
-  },
-
+  name: "Tasks",
   data() {
-    let data = [];
-
-    for (let i = 0; i <= 360; i++) {
-      let t = (i / 180) * Math.PI;
-      let r = Math.sin(2 * t) * Math.cos(2 * t);
-      data.push([r, i]);
-    }
-
     return {
       taskModal: false,
       task: {
@@ -112,54 +80,10 @@ export default {
           address: "Ottawa No. 2 Lake Park",
           date: "2016-10-04"
         }
-      ],
-      initOptions: {
-        width: 200,
-        height: 250
-      },
-      polar: {
-        title: {
-          text: "极坐标双数值轴"
-        },
-        legend: {
-          data: ["line"]
-        },
-        polar: {
-          center: ["50%", "54%"]
-        },
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross"
-          }
-        },
-        angleAxis: {
-          type: "value",
-          startAngle: 0
-        },
-        radiusAxis: {
-          min: 0
-        },
-        series: [
-          {
-            coordinateSystem: "polar",
-            name: "line",
-            type: "line",
-            showSymbol: false,
-            data: data
-          }
-        ],
-        animationDuration: 2000
-      }
+      ]
     };
   }
 };
 </script>
-
 <style scoped>
-.echarts {
-  width: 100%;
-  height: 100%;
-  text-align: center;
-}
 </style>

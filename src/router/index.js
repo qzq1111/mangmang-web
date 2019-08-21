@@ -11,7 +11,7 @@ import PersonalInformation from '@/components/user/PersonalInformation'
 import PersonalSetting from '@/components/user/PersonalSetting'
 
 import ProjectManagement from '@/components/project/ProjectManagement'
-import ProjectTasks from '@/components/project/ProjectTasks'
+import ProjectIndex from '@/components/project/ProjectIndex'
 
 
 
@@ -67,7 +67,7 @@ const router = new Router({
         {
           path: '/projectManagement/:key',
           name: "项目任务",
-          component: ProjectTasks,
+          component: ProjectIndex,
           meta: {
             requireAuth: true
           },
