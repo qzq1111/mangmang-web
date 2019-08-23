@@ -4,7 +4,6 @@
     dis-hover
     v-for="(item, index) in list1"
     :key="index"
-    style="margin: 32px 0"
   >Content {{ item }}</Card>
 </div>
 </template>

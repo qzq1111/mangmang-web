@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <Header :style="{position: 'fixed', width: '100%',zIndex:'9999'}">
+    <Header :style="{position: 'fixed', width: '100%',zIndex:'999'}">
       <Menu mode="horizontal" theme="light" width="auto" :active-name="$route.name">
         <MenuItem name="主页" :to="{ path: '/home' }">主页</MenuItem>
         <MenuItem name="项目管理" :to="{ path: '/projectManagement' }">项目管理</MenuItem>

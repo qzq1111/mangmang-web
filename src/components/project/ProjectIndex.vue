@@ -1,20 +1,18 @@
 <template>
-  <Row>
-    <Tabs value="name1">
-      <TabPane label="项目概览" name="name1">
-        <overview></overview>
-      </TabPane>
-      <TabPane label="项目动态" name="name2">
-        <dynamics></dynamics>
-      </TabPane>
-      <TabPane label="项目任务" name="name3">
-        <tasks></tasks>
-      </TabPane>
-      <TabPane label="项目管理" name="name4">
-        <settings></settings>
-      </TabPane>
-    </Tabs>
-  </Row>
+  <Tabs value="overview" @on-click="changeTab">
+    <TabPane label="项目概览" name="overview">
+      <overview ref="overview"></overview>
+    </TabPane>
+    <TabPane label="项目动态" name="dynamics">
+      <dynamics ref="dynamics"></dynamics>
+    </TabPane>
+    <TabPane label="项目任务" name="tasks">
+      <tasks ref="tasks"></tasks>
+    </TabPane>
+    <TabPane label="项目管理" name="settings">
+      <settings ref="settings"></settings>
+    </TabPane>
+  </Tabs>
 </template>
 <script>
 import Overview from "./Overview";
@@ -28,9 +26,24 @@ export default {
     Overview,
     Dynamics,
     Tasks,
-    Settings,
-    
-  }
+    Settings
+  },
+  methods: {
+    changeTab: function(name) {
+      switch (name) {
+        case "overview":
+          break;
+        case "dynamics":
+          break;
+        case "tasks": {
+          this.$refs.tasks.taskList()
+          break;
+        }
+        case "settings":
+          break;
+      }
+    }
+  },
 };
 </script>
 

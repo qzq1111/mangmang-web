@@ -42,3 +42,10 @@ export const getProjectList =(params) =>{
     })
 }
 
+export const getTaskList =(params)=>{
+    return axios.request({
+        url: `/api/v1/task`,
+        method: 'GET',
+        params: params
+    })
+}
