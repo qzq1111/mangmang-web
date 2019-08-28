@@ -49,3 +49,19 @@ export const getTaskList =(params)=>{
         params: params
     })
 }
+
+export const getFatherTask =(params)=>{
+    return axios.request({
+        url: `/api/v1/fatherTask`,
+        method: 'GET',
+        params: params
+    })
+}
+
+export const getProjectUser =(params)=>{
+    return axios.request({
+        url: `/api/v1/projectUser`,
+        method: 'GET',
+        params: params
+    })
+}

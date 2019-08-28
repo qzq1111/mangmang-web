@@ -78,14 +78,14 @@ const router = new Router({
     },
     {
       path: '*',
-      component:MangMnag404
+      component: MangMnag404
     }
   ]
 });
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
-    if (sessionStorage.getItem('userName') != "null" && sessionStorage.getItem('userName') ) {
+    if (sessionStorage.getItem('userName') != "null" && sessionStorage.getItem('userName')) {
       // 判断是否登录
       next()
     } else {
