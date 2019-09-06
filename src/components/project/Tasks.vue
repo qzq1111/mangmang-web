@@ -44,10 +44,10 @@
 
               <FormItem label="任务优先级" prop="task_priority">
                 <Select v-model="task.task_priority" clearable>
-                  <Option :value="0">0-低</Option>
-                  <Option :value="1">1-中</Option>
-                  <Option :value="2">2-高</Option>
-                  <Option :value="3">3-紧急</Option>
+                  <Option :value="0">低</Option>
+                  <Option :value="1">中</Option>
+                  <Option :value="2">高</Option>
+                  <Option :value="3">紧急</Option>
                 </Select>
               </FormItem>
 
@@ -101,7 +101,13 @@
   </div>
 </template>
 <script>
-import { getTaskList, getFatherTask, getProjectUser } from "../../api/api";
+import {
+  getTaskList,
+  getFatherTask,
+  getProjectUser,
+  createTask
+} from "../../api/api";
+import { datetimeFormat } from "../../lib/utils";
 export default {
   name: "Tasks",
   data() {
@@ -113,7 +119,7 @@ export default {
         project_id: "",
         user_id: "",
         task_name: "",
-        task_priority:0,
+        task_priority: 0,
         task_type: 0,
         task_status: 0,
         task_content: "",
@@ -323,10 +329,59 @@ export default {
     createTask: function(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.$Message.success("Success!");
-          this.taskModal = false;
+          let start_time, end_time;
+          if (this.task.start_time !== "") {
+            start_time = datetimeFormat(
+              "yyyy-MM-dd hh:mm:ss",
+              new Date(this.task.start_time)
+            );
+          } else {
+            start_time = null;
+          }
+
+          if (this.task.end_time !== "") {
+            end_time = datetimeFormat(
+              "yyyy-MM-dd hh:mm:ss",
+              new Date(this.task.end_time)
+            );
+          } else {
+            end_time = null;
+          }
+
+          createTask({
+            father_task_id: this.task.father_task_id,
+            project_id: this.$route.params.key,
+            user_id: this.task.user_id,
+            task_name: this.task.task_name,
+            task_priority: this.task.task_priority,
+            task_type: this.task.task_type,
+            task_status: this.task.task_status,
+            task_content: this.task.task_content,
+            start_time: start_time,
+            end_time: end_time
+          })
+            .then(res => {
+              let data = res.data;
+              if (data.code === 0) {
+                this.$Message.success(data.msg);
+                this.taskModal = false;
+                this.allTask();
+              } else {
+                this.$Message.error(data.msg);
+                this.loading = false;
+                this.$nextTick(() => {
+                  this.loading = true;
+                });
+              }
+            })
+            .catch(err => {
+              this.$Message.console.error("err");
+              this.loading = false;
+              this.$nextTick(() => {
+                this.loading = true;
+              });
+            });
         } else {
-          this.$Message.error("Fail!");
           this.loading = false;
           this.$nextTick(() => {
             this.loading = true;
