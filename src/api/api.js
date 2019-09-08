@@ -92,7 +92,7 @@ export const getProjectUser = (params) => {
 }
 
 /*
-获取项目相关人员
+创建任务
 @data {father_task_id,project_id,user_id,task_name,task_priority,task_type,task_status,task_content,start_time,end_time}
 */
 
@@ -101,5 +101,15 @@ export const createTask = (params) => {
         url: `/api/v1/task`,
         method: 'POST',
         data: params
+    })
+}
+/*
+删除任务
+*/
+export const deleteTask = (params) => {
+    return axios.request({
+        url: `/api/v1/task/${params}`,
+        method: 'DELETE',
+        // params: params
     })
 }

@@ -7,7 +7,7 @@
       <Col>
         <div>
           <Button type="primary" @click="onClickCreateTask('task')">添加任务</Button>
-          <Modal v-model="taskModal" title="添加任务" @on-ok="createTask('task')" :loading="loading">
+          <Modal v-model="taskModal" title="添加任务" @on-ok="onCreateTask('task')" :loading="loading">
             <Form :model="task" label-position="top" :rules="taskRuleValidate" ref="task">
               <FormItem label="任务名称" prop="task_name">
                 <Input v-model="task.task_name" placeholder="请输任务名称"></Input>
@@ -105,7 +105,8 @@ import {
   getTaskList,
   getFatherTask,
   getProjectUser,
-  createTask
+  createTask,
+  deleteTask
 } from "../../api/api";
 import { datetimeFormat } from "../../lib/utils";
 export default {
@@ -196,7 +197,7 @@ export default {
               "a",
               {
                 click: () => {
-                  // this.show(params.index);
+                  // console.log(params.index);
                 }
               },
               `#${params.row.task_number}`
@@ -209,19 +210,65 @@ export default {
         },
         {
           title: "任务优先级",
-          key: "task_priority"
+          key: "task_priority",
+          render: (h, params) => {
+            switch (params.row.task_priority) {
+              case 0:
+                return h("span", `低`);
+              case 1:
+                return h("span", `中`);
+              case 2:
+                return h("span", `高`);
+              case 3:
+                return h("span", `紧急`);
+              default:
+                return h("span", `低`);
+            }
+          }
         },
         {
           title: "任务类型",
-          key: "task_type"
+          key: "task_type",
+          render: (h, params) => {
+            switch (params.row.task_type) {
+              case 0:
+                return h("span", "需求");
+              case 1:
+                return h("span", "功能点");
+              case 2:
+                return h("span", "BUG");
+              case 3:
+                return h("span", "支持");
+            }
+          }
         },
         {
           title: "任务状态",
-          key: "task_status"
+          key: "task_status",
+          render: (h, params) => {
+            switch (params.row.task_status) {
+              case 0:
+                return h("span", "新建");
+              case 1:
+                return h("span", "处理中");
+              case 2:
+                return h("span", "已解决");
+              case 3:
+                return h("span", "反馈");
+              case 4:
+                return h("span", "拒绝");
+              case 5:
+                return h("span", "关闭");
+              case 6:
+                return h("span", "草稿");
+              default:
+                return h("span", "草稿");
+            }
+          }
         },
         {
           title: "任务人",
-          key: "user_id"
+          key: "user_name"
         },
         {
           title: "任务进度",
@@ -254,7 +301,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      // this.show(params.index);
+                      console.log(params.row.task_id);
                     }
                   }
                 },
@@ -269,7 +316,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      // this.remove(params.index);
+                      deleteTask(params.row.task_id);
                     }
                   }
                 },
@@ -326,7 +373,7 @@ export default {
       this.fatherTask();
       this.projectUser();
     },
-    createTask: function(name) {
+    onCreateTask: function(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           let start_time, end_time;
@@ -388,6 +435,21 @@ export default {
           });
         }
       });
+    },
+    onDeleteTask: function(task_id) {
+      deleteTask(task_id)
+        .then(res => {
+          let data = res.data;
+          if (data.code === 0) {
+            this.$Message.success(data.msg);
+            this.allTask();
+          } else {
+            this.$Message.error(data.msg);
+          }
+        })
+        .catch(err => {
+          this.$Message.error("err");
+        });
     }
   },
   created: function() {
