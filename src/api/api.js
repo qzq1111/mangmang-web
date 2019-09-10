@@ -68,6 +68,19 @@ export const getTaskList = (params) => {
     })
 }
 
+
+/*
+获取任务信息
+@params {project_id,key}
+*/
+export const getTask = (params) => {
+    return axios.request({
+        url: `/api/v1/task/${params.key}`,
+        method: 'GET',
+        params: params
+    })
+}
+
 /*
 获取父级任务列表
 @params {project_id}

@@ -36,7 +36,7 @@ export default {
         case "dynamics":
           break;
         case "tasks": {
-          this.$refs.tasks.allTask()
+          this.$refs.tasks.onGetTaskList()
           break;
         }
         case "settings":

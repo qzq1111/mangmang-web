@@ -5,7 +5,7 @@
         <Input search enter-button="搜索任务" placeholder="Enter something..." />
       </Col>
       <Col span="2">
-        <CreateTaskView @refresh="allTask"></CreateTaskView>
+        <CreateTaskView @refresh="onGetTaskList"></CreateTaskView>
       </Col>
       <Col span="12">
         <Button type="dashed">指定我的</Button>
@@ -17,13 +17,16 @@
     </Row>
     <br />
     <Row :gutter="16">
-      <Table :columns="columns" :data="taskList"></Table>
+      <Table :columns="columns" :data="taskList" :loading="loading"></Table>
+    </Row>
+    <Row>
+      <Page :total="total" @on-change="changPage" />
     </Row>
     <Row>
       <OpenTaskView ref="openTask" :taskId="taskId"></OpenTaskView>
     </Row>
     <Row>
-      <DeleteTaskView ref="deleteTask" :task="task" @refresh="allTask"></DeleteTaskView>
+      <DeleteTaskView ref="deleteTask" :task="task" @refresh="onGetTaskList"></DeleteTaskView>
     </Row>
   </div>
 </template>
@@ -41,8 +44,11 @@ export default {
   },
   data() {
     return {
+      loading: true,
       taskId: "",
       task: {},
+      total: 0,
+      page:1,
       columns: [
         {
           title: "任务编号",
@@ -53,8 +59,7 @@ export default {
               {
                 on: {
                   click: () => {
-                    this.taskId = params.row.task_id;
-                    this.$refs["openTask"].open();
+                    this.$refs["openTask"].open(params.row.task_id);
                   }
                 }
               },
@@ -159,8 +164,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.taskId = params.row.task_id;
-                      this.$refs["openTask"].open();
+                      this.$refs["openTask"].open(params.row.task_id);
                     }
                   }
                 },
@@ -177,7 +181,6 @@ export default {
                     click: () => {
                       this.task = params.row;
                       this.$refs["deleteTask"].open();
-                      // deleteTask(params.row.task_id);
                     }
                   }
                 },
@@ -191,19 +194,27 @@ export default {
     };
   },
   methods: {
-    allTask: function() {
-      getTaskList({ project_id: this.$route.params.key })
+    onGetTaskList: function() {
+      this.loading = true;
+      getTaskList({ project_id: this.$route.params.key,page: this.page })
         .then(res => {
           var data = res.data;
           if (data.code === 0) {
             this.taskList = data.data.tasks;
+            this.total = data.data.total;
+            this.loading = false;
+          } else {
+            this.loading = false;
           }
         })
-        .catch(err => {});
+        .catch(err => {
+          this.loading = false;
+        });
     },
-  },
-  created: function() {
-    this.allTask();
+    changPage: function(page) {
+      this.page = page
+      this.onGetTaskList()
+    }
   }
 };
 </script>

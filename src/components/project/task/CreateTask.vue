@@ -223,7 +223,8 @@ export default {
           createTask({
             father_task_id: this.task.father_task_id,
             project_id: this.$route.params.key,
-            user_id: this.task.user_id,
+            task_finisher_id: this.task.user_id,
+            task_creator_id: this.$store.getters.userId,
             task_name: this.task.task_name,
             task_priority: this.task.task_priority,
             task_type: this.task.task_type,
@@ -236,7 +237,7 @@ export default {
               let data = res.data;
               if (data.code === 0) {
                 this.$Message.success(data.msg);
-                 this.$emit('refresh');
+                this.$emit("refresh");
                 this.taskModal = false;
               } else {
                 this.$Message.error(data.msg);
@@ -245,11 +246,10 @@ export default {
                   this.loading = true;
                 });
               }
-             
             })
             .catch(err => {
-              console.log(err)
-              this.$Message.error('err');
+              console.log(err);
+              this.$Message.error("err");
               this.loading = false;
               this.$nextTick(() => {
                 this.loading = true;
