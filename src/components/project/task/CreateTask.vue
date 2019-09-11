@@ -204,7 +204,7 @@ export default {
           let start_time, end_time;
           if (this.task.start_time !== "") {
             start_time = datetimeFormat(
-              "yyyy-MM-dd hh:mm:ss",
+              "yyyy-MM-dd",
               new Date(this.task.start_time)
             );
           } else {
@@ -213,7 +213,7 @@ export default {
 
           if (this.task.end_time !== "") {
             end_time = datetimeFormat(
-              "yyyy-MM-dd hh:mm:ss",
+              "yyyy-MM-dd",
               new Date(this.task.end_time)
             );
           } else {

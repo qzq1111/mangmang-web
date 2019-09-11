@@ -2,76 +2,129 @@
   <div>
     <Drawer title="任务详情" v-model="flag" width="850" :mask-closable="true">
       <Row>
-        <h1>{{task.task_name}}</h1>
-      </Row>
-      <Row>
-        <p>任务描述：{{task.task_content}}</p>
-      </Row>
-      <Row :gutter="36">
-        <Col span="12">
-          <p>
-            类型:
-            <span v-if="task.task_type ===0">需求</span>
-            <span v-else-if="task.task_type ===1">功能点</span>
-            <span v-else-if="task.task_type ===2">BUG</span>
-            <span v-else-if="task.task_type ===3">支持</span>
+        <div :style="{position:'absolute'}">
+          <Avatar
+            :src="task.creator_avatar"
+            :style="{width:'60px',height:'60px',borderRadius: '30px'}"
+          />
+        </div>
+        <div :style="{marginLeft:'70px'}">
+          <h1>{{task.task_name}}</h1>
+          <p :style="{fontSize:'15px'}">
+            由
+            <a :href="task.task_creator_id">{{task.task_creator}}</a>
+            <Time :time="new Date(task.create_time)" :interval="1" />添加. 更新于
+            <Time :time=" new Date(task.update_time)" :interval="1" />.
           </p>
-        </Col>
-        <Col span="12">
-          <p>
-            状态:
-            <span v-if="task.task_status===0">新建</span>
-            <span v-else-if="task.task_status== 1">处理中</span>
-            <span v-else-if="task.task_status===2">已解决</span>
-            <span v-else-if="task.task_status===3">反馈</span>
-            <span v-else-if="task.task_status===4">拒绝</span>
-            <span v-else-if="task.task_status===5">关闭</span>
-            <span v-else-if="task.task_status===6">草稿</span>
-          </p>
-        </Col>
+        </div>
       </Row>
-      <Row :gutter="36">
-        <Col span="12">
-          <p>
-            优先级:
-            <span v-if="task.task_priority===0">低</span>
-            <span v-else-if="task.task_priority===1">中</span>
-            <span v-else-if="task.task_priority===2">高</span>
-            <span v-else-if="task.task_priority===3">紧急</span>
-          </p>
-        </Col>
-        <Col span="12">
-          <p>指派给:{{task.task_finisher_id}}</p>
-        </Col>
-      </Row>
-      <Row :gutter="36">
-        <Col span="12">
-          <p>开始时间:{{task.start_time}}</p>
-        </Col>
-        <Col span="12">
-          <p>结束时间:{{task.end_time}}</p>
-        </Col>
-      </Row>
+      <Divider />
       <Row :gutter="36">
         <Col span="12">
           <Row>
-            <Col span="12">完成度:</Col>
+            <Col span="12">
+              <h3>类型:</h3>
+            </Col>
+            <Col span="12">
+              <span v-if="task.task_type ===0">需求</span>
+              <span v-else-if="task.task_type ===1">功能点</span>
+              <span v-else-if="task.task_type ===2">BUG</span>
+              <span v-else-if="task.task_type ===3">支持</span>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span="12">
+              <h3>状态:</h3>
+            </Col>
+            <Col span="12">
+              <span v-if="task.task_status===0">新建</span>
+              <span v-else-if="task.task_status== 1">处理中</span>
+              <span v-else-if="task.task_status===2">已解决</span>
+              <span v-else-if="task.task_status===3">反馈</span>
+              <span v-else-if="task.task_status===4">拒绝</span>
+              <span v-else-if="task.task_status===5">关闭</span>
+              <span v-else-if="task.task_status===6">草稿</span>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span="12">
+              <h3>优先级:</h3>
+            </Col>
+            <Col span="12">
+              <span v-if="task.task_priority===0">低</span>
+              <span v-else-if="task.task_priority===1">中</span>
+              <span v-else-if="task.task_priority===2">高</span>
+              <span v-else-if="task.task_priority===3">紧急</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+              <h3>指派给:</h3>
+            </Col>
+            <Col span="12">
+              <a>{{task.task_finisher}}</a>
+            </Col>
+          </Row>
+        </Col>
+        <Col span="12">
+          <Row>
+            <Col span="12">
+              <h3>开始时间:</h3>
+            </Col>
+            <Col span="12">
+              <p>{{task.start_time}}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+              <h3>结束时间:</h3>
+            </Col>
+            <Col span="12">
+              <p>{{task.end_time}}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+              <h3>完成度:</h3>
+            </Col>
             <Col span="12">
               <Progress :percent="task.task_schedule" />
             </Col>
           </Row>
         </Col>
       </Row>
+
+      <Divider />
       <Row>
-        <h1>子任务</h1>
+        <h2>任务描述</h2>
+        <p>{{task.task_content}}</p>
       </Row>
+      <Divider />
       <Row>
-        <h1>父任务</h1>
+        <h2>子任务</h2>
+        <Col span="24" v-for="item in childTask" :key="item.task_id">
+        <Row>
+          <Col span="8">
+            <p :style="{paddingTop:'10px',fontSize:'15px'}"><a># {{item.task_number}} </a> : {{item.task_name}}</p> 
+          </Col>
+          <Col span="8">111</Col>
+          <Col span="8">
+            <p :style="">完成度%：</p>
+            <Progress :percent="item.task_schedule" />
+          </Col>
+        </Row>
+        
+        </Col>
       </Row>
+      <Divider />
       <Row>
-        <Tabs value="name1">
-          <TabPane label="动态" name="name1">动态</TabPane>
-        </Tabs>
+        <h2>父任务</h2>
+      </Row>
+      <Divider />
+      <Row>
+        <h2>动态</h2>
       </Row>
       <div class="demo-drawer-footer">
         <Button style="margin-right: 8px" @click="flag = false">Cancel</Button>
@@ -87,21 +140,31 @@ export default {
   data() {
     return {
       flag: false,
-
       task: {
-        end_time: null,
-        father_task_id: "",
-        project_id: "",
-        start_time: null,
-        task_content: "",
-        task_id: "",
-        task_name: "",
-        task_priority: 0,
-        task_schedule: 0,
-        task_status: 0,
-        task_type: 0,
-        user_id: ""
-      }
+        // create_time: "",
+        // creator_avatar: "",
+        // data_status: "",
+        // end_time: "",
+        // father_task_id: "",
+        // father_task_name: "",
+        // father_task_number: "",
+        // project_id: "",
+        // start_time: "",
+        // task_content: "",
+        // task_creator: "",
+        // task_creator_id: "",
+        // task_finisher: "",
+        // task_finisher_id: "",
+        // task_id: "",
+        // task_name: "",
+        // task_number: "",
+        // task_priority: "",
+        // task_schedule: "",
+        // task_status: "",
+        // task_type: "",
+        // update_time: ""
+      },
+      childTask: []
     };
   },
   methods: {
@@ -110,13 +173,17 @@ export default {
       this.flag = true;
     },
     taskInfo: function(taskId) {
-      getTask({ project_id: this.$route.params.key, key: taskId })
+      getTask({ key: taskId })
         .then(res => {
           var data = res.data;
-          console.log(data);
           if (data.code === 0) {
-            this.task = data.data;
+            this.task = data.data.info;
+            this.childTask = data.data.child;
+            this.$Message.success(data.msg);
           } else {
+            this.task = {};
+            this.childTask = [];
+            this.$Message.err(data.msg);
           }
         })
         .catch(err => {});
