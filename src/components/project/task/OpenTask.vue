@@ -19,6 +19,9 @@
         </div>
       </Row>
       <Divider />
+      <Row :style="{textAlign: 'right',fontSize:'15px'}">
+        <a @click="onUpdateTask(task)">编辑</a>
+      </Row>
       <Row :gutter="36">
         <Col span="12">
           <Row>
@@ -95,7 +98,6 @@
           </Row>
         </Col>
       </Row>
-
       <Divider />
       <Row>
         <h2>任务描述</h2>
@@ -105,38 +107,62 @@
       <Row>
         <h2>子任务</h2>
         <Col span="24" v-for="item in childTask" :key="item.task_id">
-        <Row>
-          <Col span="8">
-            <p :style="{paddingTop:'10px',fontSize:'15px'}"><a># {{item.task_number}} </a> : {{item.task_name}}</p> 
-          </Col>
-          <Col span="8">111</Col>
-          <Col span="8">
-            <p :style="">完成度%：</p>
-            <Progress :percent="item.task_schedule" />
-          </Col>
-        </Row>
-        
+          <Row>
+            <Col span="8">
+              <p :style="{paddingTop:'10px',fontSize:'15px'}">
+                <a @click="onChangeTask(item.task_id)">
+                  <span v-if="task.task_type ===0">需求</span>
+                  <span v-else-if="task.task_type ===1">功能点</span>
+                  <span v-else-if="task.task_type ===2">BUG</span>
+                  <span v-else-if="task.task_type ===3">支持</span>
+                  <span v-else>&nbsp;</span>
+                  <span>#{{item.task_number}}</span>
+                </a>
+                <span>： {{item.task_name}}</span>
+              </p>
+            </Col>
+            <Col span="4">
+              <span v-if="item.task_status===0">新建</span>
+              <span v-else-if="item.task_status== 1">处理中</span>
+              <span v-else-if="item.task_status===2">已解决</span>
+              <span v-else-if="item.task_status===3">反馈</span>
+              <span v-else-if="item.task_status===4">拒绝</span>
+              <span v-else-if="item.task_status===5">关闭</span>
+              <span v-else-if="item.task_status===6">草稿</span>
+              <span v-else>&nbsp;</span>
+            </Col>
+            <Col span="4">
+              <a>{{item.task_finisher}}&nbsp;</a>
+            </Col>
+            <Col span="2">
+              <p :style>完成度%：</p>
+            </Col>
+            <Col span="6">
+              <Progress :percent="item.task_schedule" />
+            </Col>
+          </Row>
         </Col>
-      </Row>
-      <Divider />
-      <Row>
-        <h2>父任务</h2>
       </Row>
       <Divider />
       <Row>
         <h2>动态</h2>
       </Row>
-      <div class="demo-drawer-footer">
+      <!-- <div class="demo-drawer-footer">
         <Button style="margin-right: 8px" @click="flag = false">Cancel</Button>
         <Button type="primary" @click="flag = false">Submit</Button>
-      </div>
+      </div>-->
     </Drawer>
+    <UpdateTaskView ref="openUpdate"></UpdateTaskView>
   </div>
 </template>
 <script>
 import { getTask } from "../../../api/api";
+import UpdateTaskView from "./UpdateTask";
 export default {
   name: "OpenTaskView",
+  components: {
+    UpdateTaskView
+  },
   data() {
     return {
       flag: false,
@@ -172,6 +198,9 @@ export default {
       this.taskInfo(taskId);
       this.flag = true;
     },
+    onChangeTask: function(taskId) {
+      this.taskInfo(taskId);
+    },
     taskInfo: function(taskId) {
       getTask({ key: taskId })
         .then(res => {
@@ -187,6 +216,9 @@ export default {
           }
         })
         .catch(err => {});
+    },
+    onUpdateTask: function(task) {
+      this.$refs["openUpdate"].open(task);
     }
   }
 };
@@ -201,5 +233,8 @@ export default {
   padding: 10px 16px;
   text-align: right;
   background: #fff;
+}
+.ivu-drawer-body {
+  overflow-x: hidden;
 }
 </style>
