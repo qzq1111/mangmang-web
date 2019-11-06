@@ -68,11 +68,11 @@
           </Col>
         </Row>
         <FormItem label="任务人" prop="user_id">
-          <Select v-model="task.user_id" filterable clearable>
+          <Select v-model="task.task_finisher_id" filterable clearable>
             <Option
               v-for="(user, index) in projectUserList"
               :value="user.user_id"
-              :key="index"
+              :key="user.user_id"
               :label="`#${user.role_name} ${user.user_name}`"
             ></Option>
           </Select>
@@ -82,7 +82,7 @@
   </div>
 </template>
 <script>
-import { getFatherTask, getProjectUser } from "../../../api/api";
+import { getFatherTask, getProjectUser, updateTask } from "../../../api/api";
 import { datetimeFormat } from "../../../lib/utils";
 export default {
   name: "UpdateTaskView",
@@ -180,15 +180,79 @@ export default {
         })
         .catch(err => {});
     },
+    onUpdateTask: function(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          let start_time, end_time;
+          if (this.task.start_time !== "") {
+            start_time = datetimeFormat( 
+              new Date(this.task.start_time),
+              "yyyy-MM-dd"
+            );
+          } else {
+            start_time = null;
+          }
+
+          if (this.task.end_time !== "") {
+            end_time = datetimeFormat(
+              new Date(this.task.end_time),
+              "yyyy-MM-dd"
+            );
+          } else {
+            end_time = null;
+          }
+
+          updateTask({
+            task_id:this.task.task_id,
+            father_task_id:this.task.father_task_id,
+            task_finisher_id:this.task.task_finisher_id,
+            task_name:this.task.task_name,
+            task_priority: this.task.task_priority,
+            task_type: this.task.task_type,
+            task_status: this.task.task_status,
+            task_content: this.task.task_content,
+            start_time: start_time,
+            end_time:end_time
+          })
+            .then(res => {
+              let data = res.data;
+              if (data.code === 0) {
+                this.$Message.success(data.msg);
+                this.taskModal = false;
+                this.$parent.taskInfo(this.task.task_id);
+              } else {
+                this.$Message.error(data.msg);
+                this.loading = false;
+                this.$nextTick(() => {
+                  this.loading = true;
+                });
+                this.$parent.taskInfo(this.task.task_id);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              this.$Message.error("err");
+              this.loading = false;
+              this.$nextTick(() => {
+                this.loading = true;
+              });
+              this.$parent.taskInfo(this.task.task_id);
+            });
+        } else {
+          this.loading = false;
+          this.$nextTick(() => {
+            this.loading = true;
+          });
+        }
+      });
+    },
     open: function(task) {
       this.task = task;
-      console.log(this.task)
       this.taskModal = true;
 
       //   this.$refs[name].resetFields();
-
-        this.fatherTask();
-        this.projectUser();
+      this.fatherTask();
+      this.projectUser();
     }
   }
 };

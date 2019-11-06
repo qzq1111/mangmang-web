@@ -111,7 +111,7 @@ export default {
         name: this.profile.name,
         email: this.profile.email,
         sex: this.profile.sex,
-        birthday: datetimeFormat("yyyy-MM-dd", new Date(this.profile.birthday)),
+        birthday: datetimeFormat(new Date(this.profile.birthday),"yyyy-MM-dd"),
         address: this.profile.address,
         position: this.profile.position,
         introduction: this.profile.introduction

@@ -126,3 +126,14 @@ export const deleteTask = (params) => {
         // params: params
     })
 }
+
+/*
+更新任务
+*/
+export const updateTask = (params) => {
+    return axios.request({
+        url: `/api/v1/task/${params.task_id}`,
+        method: 'PUT',
+        data: params
+    })
+}

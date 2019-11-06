@@ -69,11 +69,11 @@
           </Col>
         </Row>
         <FormItem label="任务人" prop="user_id">
-          <Select v-model="task.user_id" filterable clearable>
+          <Select v-model="task.task_finisher_id" filterable clearable>
             <Option
               v-for="(user, index) in projectUserList"
               :value="user.user_id"
-              :key="index"
+              :key="user.user_id"
               :label="`#${user.role_name} ${user.user_name}`"
             ></Option>
           </Select>
@@ -94,7 +94,7 @@ export default {
       task: {
         father_task_id: "",
         project_id: "",
-        user_id: "",
+        task_finisher_id: "",
         task_name: "",
         task_priority: 0,
         task_type: 0,
@@ -204,8 +204,8 @@ export default {
           let start_time, end_time;
           if (this.task.start_time !== "") {
             start_time = datetimeFormat(
-              "yyyy-MM-dd",
-              new Date(this.task.start_time)
+              new Date(this.task.start_time),
+              "yyyy-MM-dd"
             );
           } else {
             start_time = null;
@@ -213,8 +213,8 @@ export default {
 
           if (this.task.end_time !== "") {
             end_time = datetimeFormat(
-              "yyyy-MM-dd",
-              new Date(this.task.end_time)
+              new Date(this.task.end_time),
+              "yyyy-MM-dd"
             );
           } else {
             end_time = null;
@@ -223,7 +223,7 @@ export default {
           createTask({
             father_task_id: this.task.father_task_id,
             project_id: this.$route.params.key,
-            task_finisher_id: this.task.user_id,
+            task_finisher_id: this.task.task_finisher_id,
             task_creator_id: this.$store.getters.userId,
             task_name: this.task.task_name,
             task_priority: this.task.task_priority,

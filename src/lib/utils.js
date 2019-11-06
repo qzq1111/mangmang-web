@@ -1,4 +1,4 @@
-export  function datetimeFormat(fmt, date) {
+export  function datetimeFormat(date,fmt ) {
     var o = {
       "M+": date.getMonth() + 1, //月份
       "d+": date.getDate(), //日

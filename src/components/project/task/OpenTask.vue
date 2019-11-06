@@ -77,7 +77,7 @@
               <h3>开始时间:</h3>
             </Col>
             <Col span="12">
-              <p>{{task.start_time}}</p>
+              <p>{{task.start_time | formatDate}}</p>
             </Col>
           </Row>
           <Row>
@@ -85,7 +85,7 @@
               <h3>结束时间:</h3>
             </Col>
             <Col span="12">
-              <p>{{task.end_time}}</p>
+              <p>{{task.end_time | formatDate}}</p>
             </Col>
           </Row>
           <Row>
@@ -157,6 +157,7 @@
 </template>
 <script>
 import { getTask } from "../../../api/api";
+import { datetimeFormat } from "../../../lib/utils";
 import UpdateTaskView from "./UpdateTask";
 export default {
   name: "OpenTaskView",
@@ -208,7 +209,6 @@ export default {
           if (data.code === 0) {
             this.task = data.data.info;
             this.childTask = data.data.child;
-            this.$Message.success(data.msg);
           } else {
             this.task = {};
             this.childTask = [];
@@ -220,7 +220,16 @@ export default {
     onUpdateTask: function(task) {
       this.$refs["openUpdate"].open(task);
     }
-  }
+  },
+  filters: {
+    formatDate(time) {
+      if(time ==="" || time ===null){
+        return 
+      }
+    var date = new Date(time);
+    return datetimeFormat(date, 'yyyy-MM-dd');
+   }
+},
 };
 </script>
 <style>
