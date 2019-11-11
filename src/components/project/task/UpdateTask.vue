@@ -1,6 +1,12 @@
 <template>
   <div>
-    <Modal v-model="taskModal" title="编辑任务" @on-ok="onUpdateTask('task')" :loading="loading">
+    <Modal
+      v-model="taskModal"
+      title="编辑任务"
+      @on-ok="onUpdateTask('task')"
+      :loading="loading"
+      @on-cancel="onCancalUpdateTask('task')"
+    >
       <Form :model="task" label-position="top" :rules="taskRuleValidate" ref="task">
         <FormItem label="任务名称" prop="task_name">
           <Input v-model="task.task_name" placeholder="请输任务名称"></Input>
@@ -14,45 +20,58 @@
           ></Input>
         </FormItem>
 
-        <FormItem label="任务类型" prop="task_type">
-          <Select v-model="task.task_type" clearable>
-            <Option :value="0">需求</Option>
-            <Option :value="1">功能点</Option>
-            <Option :value="2">BUG</Option>
-            <Option :value="3">支持</Option>
-          </Select>
-        </FormItem>
+        <Row :gutter="16">
+          <Col :span="12">
+            <FormItem label="任务类型" prop="task_type">
+              <Select v-model="task.task_type" clearable>
+                <Option :value="0">需求</Option>
+                <Option :value="1">功能点</Option>
+                <Option :value="2">BUG</Option>
+                <Option :value="3">支持</Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col :span="12">
+            <FormItem label="任务状态" prop="task_status">
+              <Select v-model="task.task_status" clearable>
+                <Option :value="0">新建</Option>
+                <Option :value="1">处理中</Option>
+                <Option :value="2">已解决</Option>
+                <Option :value="3">反馈</Option>
+                <Option :value="4">拒绝</Option>
+                <Option :value="5">关闭</Option>
+                <Option :value="6">草稿</Option>
+              </Select>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row :gutter="16">
+          <Col :span="12">
+            <FormItem label="任务优先级" prop="task_priority">
+              <Select v-model="task.task_priority" clearable>
+                <Option :value="0">低</Option>
+                <Option :value="1">中</Option>
+                <Option :value="2">高</Option>
+                <Option :value="3">紧急</Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col :span="12">
+            <FormItem label="父级任务" prop="father_task_id">
+              <Select v-model="task.father_task_id" filterable clearable>
+                <Option
+                  v-for="(task, index) in fatherTaskList"
+                  :value="task.task_id"
+                  :key="index"
+                  :label="`#${task.task_number} ${task.task_name}`"
+                ></Option>
+              </Select>
+            </FormItem>
+          </Col>
+        </Row>
 
-        <FormItem label="任务状态" prop="task_status">
-          <Select v-model="task.task_status" clearable>
-            <Option :value="0">新建</Option>
-            <Option :value="1">处理中</Option>
-            <Option :value="2">已解决</Option>
-            <Option :value="3">反馈</Option>
-            <Option :value="4">拒绝</Option>
-            <Option :value="5">关闭</Option>
-            <Option :value="6">草稿</Option>
-          </Select>
-        </FormItem>
-
-        <FormItem label="任务优先级" prop="task_priority">
-          <Select v-model="task.task_priority" clearable>
-            <Option :value="0">低</Option>
-            <Option :value="1">中</Option>
-            <Option :value="2">高</Option>
-            <Option :value="3">紧急</Option>
-          </Select>
-        </FormItem>
-
-        <FormItem label="父级任务" prop="father_task_id">
-          <Select v-model="task.father_task_id" filterable clearable>
-            <Option
-              v-for="(task, index) in fatherTaskList"
-              :value="task.task_id"
-              :key="index"
-              :label="`#${task.task_number} ${task.task_name}`"
-            ></Option>
-          </Select>
+        <FormItem label="完成度" prop="task_schedule">
+          <Slider v-model="task.task_schedule" :step="10" :tip-format="taskScheduleFormat"></Slider>
         </FormItem>
 
         <Row :gutter="36">
@@ -156,6 +175,9 @@ export default {
     };
   },
   methods: {
+    taskScheduleFormat(val) {
+      return "完成:" + val + "%";
+    },
     fatherTask: function() {
       getFatherTask({ project_id: this.$route.params.key })
         .then(res => {
@@ -184,8 +206,9 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           let start_time, end_time;
-          if (this.task.start_time !== "") {
-            start_time = datetimeFormat( 
+
+          if ((this.task.start_time !== "") & (this.task.start_time !== null)) {
+            start_time = datetimeFormat(
               new Date(this.task.start_time),
               "yyyy-MM-dd"
             );
@@ -193,7 +216,7 @@ export default {
             start_time = null;
           }
 
-          if (this.task.end_time !== "") {
+          if ((this.task.end_time !== "") & (this.task.end_time !== null)) {
             end_time = datetimeFormat(
               new Date(this.task.end_time),
               "yyyy-MM-dd"
@@ -203,16 +226,17 @@ export default {
           }
 
           updateTask({
-            task_id:this.task.task_id,
-            father_task_id:this.task.father_task_id,
-            task_finisher_id:this.task.task_finisher_id,
-            task_name:this.task.task_name,
+            task_id: this.task.task_id,
+            father_task_id: this.task.father_task_id,
+            task_finisher_id: this.task.task_finisher_id,
+            task_name: this.task.task_name,
             task_priority: this.task.task_priority,
             task_type: this.task.task_type,
             task_status: this.task.task_status,
             task_content: this.task.task_content,
+            task_schedule: this.task.task_schedule,
             start_time: start_time,
-            end_time:end_time
+            end_time: end_time
           })
             .then(res => {
               let data = res.data;
@@ -243,8 +267,12 @@ export default {
           this.$nextTick(() => {
             this.loading = true;
           });
+          this.$parent.taskInfo(this.task.task_id);
         }
       });
+    },
+    onCancalUpdateTask: function(name) {
+      this.$parent.taskInfo(this.task.task_id);
     },
     open: function(task) {
       this.task = task;

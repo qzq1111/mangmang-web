@@ -23,7 +23,7 @@
       <Page :total="total" @on-change="changPage" />
     </Row>
     <Row>
-      <OpenTaskView ref="openTask" :taskId="taskId"></OpenTaskView>
+      <OpenTaskView ref="openTask" :taskId="taskId" @onGetTaskList="onGetTaskList"></OpenTaskView>
     </Row>
     <Row>
       <DeleteTaskView ref="deleteTask" :task="task" @refresh="onGetTaskList"></DeleteTaskView>
@@ -48,7 +48,7 @@ export default {
       taskId: "",
       task: {},
       total: 0,
-      page:1,
+      page: 1,
       columns: [
         {
           title: "任务编号",
@@ -196,7 +196,7 @@ export default {
   methods: {
     onGetTaskList: function() {
       this.loading = true;
-      getTaskList({ project_id: this.$route.params.key,page: this.page })
+      getTaskList({ project_id: this.$route.params.key, page: this.page })
         .then(res => {
           var data = res.data;
           if (data.code === 0) {
@@ -212,8 +212,8 @@ export default {
         });
     },
     changPage: function(page) {
-      this.page = page
-      this.onGetTaskList()
+      this.page = page;
+      this.onGetTaskList();
     }
   }
 };

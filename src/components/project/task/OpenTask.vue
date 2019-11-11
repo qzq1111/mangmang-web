@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Drawer title="任务详情" v-model="flag" width="850" :mask-closable="true">
+    <Drawer title="任务详情" v-model="flag" width="850" :mask-closable="true" @on-close="onCloseTask()">
       <Row>
         <div :style="{position:'absolute'}">
           <Avatar
@@ -202,6 +202,9 @@ export default {
     onChangeTask: function(taskId) {
       this.taskInfo(taskId);
     },
+    onCloseTask: function() {
+      this.$emit('onGetTaskList');
+    },
     taskInfo: function(taskId) {
       getTask({ key: taskId })
         .then(res => {
@@ -223,13 +226,13 @@ export default {
   },
   filters: {
     formatDate(time) {
-      if(time ==="" || time ===null){
-        return 
+      if (time === "" || time === null) {
+        return;
       }
-    var date = new Date(time);
-    return datetimeFormat(date, 'yyyy-MM-dd');
-   }
-},
+      var date = new Date(time);
+      return datetimeFormat(date, "yyyy-MM-dd");
+    }
+  }
 };
 </script>
 <style>
