@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Drawer title="任务详情" v-model="flag" width="850" :mask-closable="true" @on-close="onCloseTask()">
+    <Drawer title="任务详情" v-model="flag" width="850" :mask-closable="true">
       <Row>
         <div :style="{position:'absolute'}">
           <Avatar
@@ -19,9 +19,6 @@
         </div>
       </Row>
       <Divider />
-      <Row :style="{textAlign: 'right',fontSize:'15px'}">
-        <a @click="onUpdateTask(task)">编辑</a>
-      </Row>
       <Row :gutter="36">
         <Col span="12">
           <Row>
@@ -152,18 +149,13 @@
         <Button type="primary" @click="flag = false">Submit</Button>
       </div>-->
     </Drawer>
-    <UpdateTaskView ref="openUpdate"></UpdateTaskView>
   </div>
 </template>
 <script>
 import { getTask } from "../../../api/api";
 import { datetimeFormat } from "../../../lib/utils";
-import UpdateTaskView from "./UpdateTask";
 export default {
   name: "OpenTaskView",
-  components: {
-    UpdateTaskView
-  },
   data() {
     return {
       flag: false,
@@ -202,9 +194,6 @@ export default {
     onChangeTask: function(taskId) {
       this.taskInfo(taskId);
     },
-    onCloseTask: function() {
-      this.$emit('onGetTaskList');
-    },
     taskInfo: function(taskId) {
       getTask({ key: taskId })
         .then(res => {
@@ -219,9 +208,6 @@ export default {
           }
         })
         .catch(err => {});
-    },
-    onUpdateTask: function(task) {
-      this.$refs["openUpdate"].open(task);
     }
   },
   filters: {

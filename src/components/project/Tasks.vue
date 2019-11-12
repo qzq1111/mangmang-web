@@ -23,7 +23,10 @@
       <Page :total="total" @on-change="changPage" />
     </Row>
     <Row>
-      <OpenTaskView ref="openTask" :taskId="taskId" @onGetTaskList="onGetTaskList"></OpenTaskView>
+      <OpenTaskView ref="openTask" :taskId="taskId"></OpenTaskView>
+    </Row>
+    <Row>
+      <UpdateTaskView ref="updateTask" :taskId="taskId" @onGetTaskList="onGetTaskList"></UpdateTaskView>
     </Row>
     <Row>
       <DeleteTaskView ref="deleteTask" :task="task" @refresh="onGetTaskList"></DeleteTaskView>
@@ -32,15 +35,18 @@
 </template>
 <script>
 import { getTaskList } from "../../api/api";
+import { datetimeFormat } from "../../lib/utils";
 import CreateTaskView from "./task/CreateTask";
 import OpenTaskView from "./task/OpenTask";
 import DeleteTaskView from "./task/DeleteTask";
+import UpdateTaskView from "./task/UpdateTask";
 export default {
   name: "Tasks",
   components: {
     CreateTaskView,
     OpenTaskView,
-    DeleteTaskView
+    DeleteTaskView,
+    UpdateTaskView
   },
   data() {
     return {
@@ -142,11 +148,17 @@ export default {
         },
         {
           title: "开始时间",
-          key: "start_time"
+          key: "start_time",
+          render: (h, params) => {
+            return h("span", `${this.formatDate(params.row.start_time)}`);
+          }
         },
         {
           title: "计划完成时间",
-          key: "end_time"
+          key: "end_time",
+          render: (h, params) => {
+            return h("span", `${this.formatDate(params.row.end_time)}`);
+          }
         },
         {
           title: "操作",
@@ -174,6 +186,24 @@ export default {
                 "Button",
                 {
                   props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.$refs["updateTask"].open(params.row);
+                    }
+                  }
+                },
+                "编辑"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
                     type: "error",
                     size: "small"
                   },
@@ -194,6 +224,13 @@ export default {
     };
   },
   methods: {
+    formatDate(time) {
+      if (time === "" || time === null) {
+        return "";
+      }
+      var date = new Date(time);
+      return datetimeFormat(date, "yyyy-MM-dd");
+    },
     onGetTaskList: function() {
       this.loading = true;
       getTaskList({ project_id: this.$route.params.key, page: this.page })

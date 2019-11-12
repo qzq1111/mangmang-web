@@ -1,12 +1,6 @@
 <template>
   <div>
-    <Modal
-      v-model="taskModal"
-      title="编辑任务"
-      @on-ok="onUpdateTask('task')"
-      :loading="loading"
-      @on-cancel="onCancalUpdateTask('task')"
-    >
+    <Modal v-model="taskModal" title="编辑任务" @on-ok="onUpdateTask('task')" :loading="loading">
       <Form :model="task" label-position="top" :rules="taskRuleValidate" ref="task">
         <FormItem label="任务名称" prop="task_name">
           <Input v-model="task.task_name" placeholder="请输任务名称"></Input>
@@ -243,42 +237,33 @@ export default {
               if (data.code === 0) {
                 this.$Message.success(data.msg);
                 this.taskModal = false;
-                this.$parent.taskInfo(this.task.task_id);
               } else {
                 this.$Message.error(data.msg);
                 this.loading = false;
                 this.$nextTick(() => {
                   this.loading = true;
                 });
-                this.$parent.taskInfo(this.task.task_id);
               }
             })
             .catch(err => {
               console.log(err);
-              this.$Message.error("err");
               this.loading = false;
               this.$nextTick(() => {
                 this.loading = true;
               });
-              this.$parent.taskInfo(this.task.task_id);
             });
         } else {
           this.loading = false;
           this.$nextTick(() => {
             this.loading = true;
           });
-          this.$parent.taskInfo(this.task.task_id);
         }
       });
-    },
-    onCancalUpdateTask: function(name) {
-      this.$parent.taskInfo(this.task.task_id);
     },
     open: function(task) {
       this.task = task;
       this.taskModal = true;
 
-      //   this.$refs[name].resetFields();
       this.fatherTask();
       this.projectUser();
     }
